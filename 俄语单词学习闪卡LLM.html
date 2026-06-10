@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词闪卡 - 基础词汇100</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* 闪卡容器 */
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 350px;
+            height: 250px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* 正反面通用样式 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 正面样式 */
+        .card-front {
+            color: var(--primary-color);
+        }
+
+        .card-front .word {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        /* 背面样式 */
+        .card-back {
+            background-color: var(--accent-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-back .phonetic {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .card-back .translation {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        /* 控制按钮 */
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin: 0 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .progress {
+            margin-top: 15px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>俄语单词闪卡</h1>
+        <div class="flashcard-wrapper" onclick="flipCard()">
+            <div class="flashcard" id="card">
+                <!-- 正面：俄语单词 -->
+                <div class="card-face card-front">
+                    <div class="word" id="word-front">бумага</div>
+                </div>
+                <!-- 背面：音标和中文 -->
+                <div class="card-face card-back">
+                    <div class="phonetic" id="phonetic-back">bumága</div>
+                    <div class="translation" id="translation-back">纸</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="prevCard()">上一个</button>
+            <button onclick="nextCard()">下一个</button>
+            <button onclick="shuffleCards()">打乱顺序</button>
+        </div>
+
+        <div class="progress" id="progress">1 / 100</div>
+    </div>
+
+    <script>
+        const words = [
+            { ru: "бумага", ph: "bumága", cn: "纸" },
+            { ru: "дом", ph: "dom", cn: "房子" },
+            { ru: "кинó", ph: "gi-nó", cn: "电影" },
+            { ru: "окнó", ph: "ak-nó", cn: "窗户" },
+            { ru: "книга(ги)", ph: "k-nʲí-ga(gi)", cn: "书（复数）" },
+            { ru: "комната", ph: "kóm-nadə", cn: "房间" },
+            { ru: "нога", ph: "nagá", cn: "腿, 脚" },
+            { ru: "кинотеатр", ph: "ginə-jiádr", cn: "电影院" },
+            { ru: "погода", ph: "bagódə", cn: "天气" },
+            { ru: "кто", ph: "kdo", cn: "谁" },
+            { ru: "мы", ph: "mei", cn: "我们" },
+            { ru: "она", ph: "a-ná", cn: "她" },
+            { ru: "они (он)", ph: "a-nʲí (a-n)", cn: "他们 (他)" },
+            { ru: "оно", ph: "a-nó", cn: "它" },
+            { ru: "тот", ph: "dot", cn: "那个" },
+            { ru: "ты", ph: "dei", cn: "你" },
+            { ru: "это", ph: "éda", cn: "这 这是" },
+            { ru: "этот", ph: "édət", cn: "这个" },
+            { ru: "и", ph: "i", cn: "和" },
+            { ru: "дома", ph: "dómə", cn: "在家里" },
+            { ru: "много", ph: "mnógə", cn: "许多" },
+            { ru: "тихо", ph: "jí-ha", cn: "小声地;宁静地" },
+            { ru: "да", ph: "da", cn: "是/是的" },
+            { ru: "пока", ph: "ba-gá", cn: "再见" },
+            { ru: "когда", ph: "kag-dá", cn: "当…什么时候" },
+            { ru: "говорить", ph: "gəva-lí-qi", cn: "说/说话(未完成时态)" },
+            { ru: "мышь", ph: "mə-ʃ", cn: "老鼠" },
+            { ru: "ви诺", ph: "vi-nó", cn: "酒；葡萄酒" },
+            { ru: "внук", ph: "v-nuk", cn: "孙子" },
+            { ru: "гора", ph: "ga-dá", cn: "山" },
+            { ru: "доктор", ph: "dók-dr", cn: "医生/博士" },
+            { ru: "игра", ph: "ig-drá", cn: "游戏/比赛" },
+            { ru: "карта", ph: "kádr-da", cn: "地图" },
+            { ru: "картина", ph: "gadr-jína", cn: "画/图片/电影" },
+            { ru: "климат", ph: "klí-mət", cn: "气候" },
+            { ru: "мэр", ph: "méi-dr", cn: "市长" },
+            { ru: "лифт", ph: "lift", cn: "电梯" },
+            { ru: "луна", ph: "lu-ná", cn: "月亮" },
+            { ru: "парк", ph: "badr-k", cn: "公园" },
+            { ru: "молоко", ph: "məla-guó", cn: "牛奶" },
+            { ru: "парта", ph: "bárda", cn: "课桌" },
+            { ru: "пол", ph: "bol", cn: "地板" },
+            { ru: "рука", ph: "ədru'ka", cn: "手/臂" },
+            { ru: "рыба", ph: "ədrí-ba", cn: "鱼" },
+            { ru: "тигр", ph: "ji-gdr", cn: "老虎" },
+            { ru: "торт", ph: "do'drt", cn: "蛋糕" },
+            { ru: "урoк", ph: "u-drók", cn: "课" },
+            { ru: "вода", ph: "va-dá", cn: "水" },
+            { ru: "фрукты", ph: "flúk-dei", cn: "水果（复数）" },
+            { ru: "вкусно", ph: "f-gús-na", cn: "好吃，美味" },
+            { ru: "футбол", ph: "fud-ból", cn: "足球(运动)" },
+            { ru: "вы", ph: "vei", cn: "你们; 您" },
+            { ru: "вот", ph: "vot", cn: "这就是(语气词)" },
+            { ru: "альбом", ph: "ali-bóm", cn: "相册" },
+            { ru: "город", ph: "gó-dət", cn: "城市" },
+            { ru: "гриб", ph: "g-lip", cn: "蘑菇" },
+            { ru: "доска", ph: "das-gá", cn: "木板；黑板" },
+            { ru: "читать", ph: "qi-dá-qi", cn: "读" },
+            { ru: "завод", ph: "za-vót", cn: "工厂(重工业)" },
+            { ru: "зал", ph: "zal", cn: "大厅；会客厅" },
+            { ru: "зоопарк", ph: "za: -bádrk", cn: "动物园" },
+            { ru: "класс", ph: "klas", cn: "班级；教室" },
+            { ru: "клуб", ph: "klup", cn: "俱乐部" },
+            { ru: "композитор", ph: "kəmba-ídəlr", cn: "作曲家" },
+            { ru: "мост", ph: "most", cn: "桥" },
+            { ru: "магазин", ph: "məga-jín", cn: "商店" },
+            { ru: "народ", ph: "na-dót", cn: "人民" },
+            { ru: "пальто", ph: "bayi-dó", cn: "外套；大衣" },
+            { ru: "письмо", ph: "bixi-mó", cn: "信" },
+            { ru: "подруга", ph: "ba-dlú-gə", cn: "女（性）朋友" },
+            { ru: "район", ph: "ədra-yón", cn: "地区；一带" },
+            { ru: "рубль", ph: "ədu'bli", cn: "卢布（钱）" },
+            { ru: "сад", ph: "sat", cn: "花园" },
+            { ru: "словарь", ph: "sla-váli", cn: "词典" },
+            { ru: "собака", ph: "sa-bága", cn: "狗；@ 符号" },
+            { ru: "стол", ph: "sdol", cn: "桌子" },
+            { ru: "стул", ph: "sdul", cn: "椅子；凳子" },
+            { ru: "мой", ph: "moi", cn: "我的" },
+            { ru: "вой", ph: "voi", cn: "你的" },
+            { ru: "ваш", ph: "vaʃ", cn: "你的" },
+            { ru: "дело", ph: "jié-lə", cn: "事情（单数）" },
+            { ru: "дела", ph: "jié-la", cn: "事情（复数）" },
+            { ru: "сумка", ph: "súm-ga", cn: "手提包/各种包" },
+            { ru: "адрес", ph: "ád-lis", cn: "地址" },
+            { ru: "берёза", ph: "bi-lju-zə", cn: "白桦树" },
+            { ru: "газета", ph: "ga-jié-də", cn: "报纸" },
+            { ru: "деньги", ph: "jín-gei", cn: "钱" },
+            { ru: "откуда ты?", ph: "at-gú-də dei?", cn: "你从哪里来？" },
+            { ru: "откуда вы?", ph: "at-gú-də vei?", cn: "您从哪里来？" },
+            { ru: "рюкзак", ph: "ədjuk-záк", cn: "(双肩)背包" },
+            { ru: "ёлка", ph: "il-ga", cn: "圣诞树 枞树" },
+            { ru: "костюм", ph: "gaxi-jiúm", cn: "西装；连衣裙" },
+            { ru: "ну и что？", ph: "nu yi ʃdo", cn: "那又怎样？" },
+            { ru: "metro", ph: "mi-dló", cn: "地铁" },
+            { ru: "музей", ph: "mu-zéy", cn: "博物馆" },
+            { ru: "озеро", ph: "ó-jie-drə", cn: "湖" },
+            { ru: "платье", ph: "blá-qie", cn: "连衣裙" },
+            { ru: "портфель", ph: "badrt-féi-li", cn: "文件包 公文包" },
+            { ru: "привет", ph: "bli-vjét", cn: "你好" },
+            { ru: "река", ph: "əli-ká", cn: "河, 江" }
+        ];
+
+        let currentIndex = 0;
+        const cardElement = document.getElementById('card');
+        const wordFront = document.getElementById('word-front');
+        const phoneticBack = document.getElementById('phonetic-back');
+        const translationBack = document.getElementById('translation-back');
+        const progressText = document.getElementById('progress');
+
+        function updateCard() {
+            cardElement.classList.remove('flipped');
+            setTimeout(() => {
+                const current = words[currentIndex];
+                wordFront.textContent = current.ru;
+                phoneticBack.textContent = current.ph;
+                translationBack.textContent = current.cn;
+                progressText.textContent = `${currentIndex + 1} / ${words.length}`;
+            }, 150);
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = words.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [words[i], words[j]] = [words[j], words[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        // 键盘支持
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') flipCard();
+            if (e.code === 'ArrowRight') nextCard();
+            if (e.code === 'ArrowLeft') prevCard();
+        });
+    </script>
+</body>
+</html>
