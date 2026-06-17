@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ru-zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", Arial, sans-serif;
+        }
+        body {
+            background-color: #f0f5f9;
+            padding: 30px 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 26px;
+        }
+        .card-wrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .flash-card {
+            height: 180px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-radius: 12px;
+        }
+        .flash-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-front {
+            background: #ffffff;
+            color: #1a2530;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card-back {
+            background: #2980b9;
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 15px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        .phonetic {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .tip {
+            margin-top: 6px;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+        .tip-title {
+            text-align: center;
+            margin: 30px 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>俄语单词记忆闪卡</h1>
+    <div class="tip">点击卡片正反面翻转查看释义</div>
+    <div class="card-wrap">
+        <!-- 单词1 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">Заба́вная</div>
+                <div class="card-back">
+                    <div class="phonetic">[zɐˈbavnəjə]</div>
+                    <div>有趣的/好玩的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词2 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">исто́рия</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɪˈstorʲɪjə]</div>
+                    <div>故事/历史/事件</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词3 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">про</div>
+                <div class="card-back">
+                    <div class="phonetic">[Pra]</div>
+                    <div>关于/涉及/为了</div>
+                    <div class="tip">后接名词第四格</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词4 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">витами́ны</div>
+                <div class="card-back">
+                    <div class="phonetic">[vʲɪtɐˈmʲinɨ]</div>
+                    <div>维生素/维他命</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词5 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">Весно́й</div>
+                <div class="card-back">
+                    <div class="phonetic">[vʲɪˈsnoј]</div>
+                    <div>在春天</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词6 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">у</div>
+                <div class="card-back">
+                    <div class="phonetic">/ʊ/</div>
+                    <div>在某人那里/某人有……</div>
+                    <div class="tip">搭配第二格使用</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词7 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">О́ли</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈolʲɪ]</div>
+                    <div>奥利娅的</div>
+                    <div class="tip">О́ля第二格人名变格</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词8 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">бы́ло</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈbɨlə]</div>
+                    <div>曾有/曾经是</div>
+                    <div class="tip">中性过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词9 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">мно́го</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈmnoɡə]</div>
+                    <div>很多</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词10 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">рабо́ты</div>
+                <div class="card-back">
+                    <div class="phonetic">[rɐˈbotɨ]</div>
+                    <div>工作</div>
+                    <div class="tip">名词生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词11 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">саду́</div>
+                <div class="card-back">
+                    <div class="phonetic">[sɐˈdu]</div>
+                    <div>花园里</div>
+                    <div class="tip">名词处所格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词12 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">Она́</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɐˈna]</div>
+                    <div>她</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词13 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">посади́ла</div>
+                <div class="card-back">
+                    <div class="phonetic">[pəsɐˈdʲilə]</div>
+                    <div>种下</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词14 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">цвето́в</div>
+                <div class="card-back">
+                    <div class="phonetic">[tsʲvʲɪˈtof]</div>
+                    <div>花朵</div>
+                    <div class="tip">名词复数生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词15 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">овоще́й</div>
+                <div class="card-back">
+                    <div class="phonetic">[əvɐˈɕːej]</div>
+                    <div>蔬菜</div>
+                    <div class="tip">名词复数生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词16 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">че́рез</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈtɕerʲɪs]</div>
+                    <div>经过/……之后</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词17 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">не́сколько</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈnʲeskəlʲkə]</div>
+                    <div>几个</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词18 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">дней</div>
+                <div class="card-back">
+                    <div class="phonetic">[dʲnʲej]</div>
+                    <div>天数/日子</div>
+                    <div class="tip">名词复数生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词19 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">почу́вствовала</div>
+                <div class="card-back">
+                    <div class="phonetic">[pɐˈtɕustvəvələ]</div>
+                    <div>感觉到</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词20 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">уста́лость</div>
+                <div class="card-back">
+                    <div class="phonetic">[uˈstaləsʲtʲ]</div>
+                    <div>疲倦</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词21 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">поду́мала</div>
+                <div class="card-back">
+                    <div class="phonetic">[pɐˈdumələ]</div>
+                    <div>思考/想</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词22 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">хвата́ет</div>
+                <div class="card-back">
+                    <div class="phonetic">[xvɐˈtajɪt]</div>
+                    <div>足够/缺少（否定句）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词23 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">сил</div>
+                <div class="card-back">
+                    <div class="phonetic">[sʲil]</div>
+                    <div>体力/力量</div>
+                    <div class="tip">名词复数生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词24 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">реши́ла</div>
+                <div class="card-back">
+                    <div class="phonetic">[rʲɪˈʂɨlə]</div>
+                    <div>决定</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词25 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">купи́ть</div>
+                <div class="card-back">
+                    <div class="phonetic">[kuˈpʲitʲ]</div>
+                    <div>买</div>
+                    <div class="tip">动词原形</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词26 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">апте́ке</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɐpˈtʲekʲɪ]</div>
+                    <div>药店</div>
+                    <div class="tip">名词前置格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词27 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">продаве́ц</div>
+                <div class="card-back">
+                    <div class="phonetic">[prədɐˈvʲets]</div>
+                    <div>店员/售货员</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词28 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">показа́л</div>
+                <div class="card-back">
+                    <div class="phonetic">[pəkɐˈzal]</div>
+                    <div>展示/给……看</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词29 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">ра́зные</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈraznɨjɪ]</div>
+                    <div>各种各样的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词30 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">вы́брала</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈvɨbrələ]</div>
+                    <div>挑选</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词31 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">цветны́е</div>
+                <div class="card-back">
+                    <div class="phonetic">[tsvʲɪtˈnɨjɪ]</div>
+                    <div>彩色的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词32 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">табле́тки</div>
+                <div class="card-back">
+                    <div class="phonetic">[tɐˈblʲetkʲɪ]</div>
+                    <div>药片</div>
+                    <div class="tip">名词复数形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词33 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">наде́ялась</div>
+                <div class="card-back">
+                    <div class="phonetic">[nɐˈdʲejələsʲ]</div>
+                    <div>希望</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词34 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">помо́гут</div>
+                <div class="card-back">
+                    <div class="phonetic">[pɐˈmoɡut]</div>
+                    <div>将帮助</div>
+                    <div class="tip">动词将来时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词35 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">быть</div>
+                <div class="card-back">
+                    <div class="phonetic">[bɨtʲ]</div>
+                    <div>是/成为</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词36 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">здоро́вой</div>
+                <div class="card-back">
+                    <div class="phonetic">[zdɐˈrovəj]</div>
+                    <div>健康的</div>
+                    <div class="tip">阴性第五格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词37 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">си́льной</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈsʲilʲnəj]</div>
+                    <div>强壮的</div>
+                    <div class="tip">阴性第五格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词38 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">сле́дующий</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈslʲedʊjʉɕːɪj]</div>
+                    <div>接下来的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词39 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">день</div>
+                <div class="card-back">
+                    <div class="phonetic">[dʲenʲ]</div>
+                    <div>日子/天</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词40 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">приняла́</div>
+                <div class="card-back">
+                    <div class="phonetic">[prʲɪnʲɪˈla]</div>
+                    <div>服用</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词41 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">пошла́</div>
+                <div class="card-back">
+                    <div class="phonetic">[pɐˈʂla]</div>
+                    <div>步行去</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词42 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">час</div>
+                <div class="card-back">
+                    <div class="phonetic">[tɕas]</div>
+                    <div>小时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词43 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">заме́тила</div>
+                <div class="card-back">
+                    <div class="phonetic">[zɐˈmʲetʲɪlə]</div>
+                    <div>注意到</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词44 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">раста́яли</div>
+                <div class="card-back">
+                    <div class="phonetic">[rɐˈstajɪlʲɪ]</div>
+                    <div>融化了</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词45 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">рту</div>
+                <div class="card-back">
+                    <div class="phonetic">[rtu]</div>
+                    <div>嘴里</div>
+                    <div class="tip">名词处所格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词46 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">бы́ли</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈbɨlʲɪ]</div>
+                    <div>曾是</div>
+                    <div class="tip">复数过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词47 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">ки́слыми</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈkʲislɨmʲɪ]</div>
+                    <div>酸的</div>
+                    <div class="tip">复数第五格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词48 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">сла́дкими</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈslatkʲɪmʲɪ]</div>
+                    <div>甜的</div>
+                    <div class="tip">复数第五格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词49 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">одновреме́нно</div>
+                <div class="card-back">
+                    <div class="phonetic">[ədnəvrʲɪˈmʲenːə]</div>
+                    <div>同时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词50 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">засмея́лась</div>
+                <div class="card-back">
+                    <div class="phonetic">[zəsmʲɪˈjaləsʲ]</div>
+                    <div>笑了起来</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词51 -->
+        <div classflash-card onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">ожида́ла</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɐʐɨˈdalə]</div>
+                    <div>预料/期待</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词52 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">вку́са</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈfkusə]</div>
+                    <div>味道</div>
+                    <div class="tip">名词生格形式</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词53 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">Ве́чером</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈvʲetɕɪrəm]</div>
+                    <div>在晚上</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词54 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">пришёл</div>
+                <div class="card-back">
+                    <div class="phonetic">[prʲɪˈʂol]</div>
+                    <div>来到</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词55 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">друг</div>
+                <div class="card-back">
+                    <div class="phonetic">[druk]</div>
+                    <div>朋友</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词56 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">уви́дел</div>
+                <div class="card-back">
+                    <div class="phonetic">[uˈvʲidʲɪl]</div>
+                    <div>看到</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词57 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">сказа́л</div>
+                <div class="card-back">
+                    <div class="phonetic">[skɐˈzal]</div>
+                    <div>说</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词58 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">то́же</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈtoʐə]</div>
+                    <div>也</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词59 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">хо́чет</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈxotɕɪt]</div>
+                    <div>想要</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词60 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">попро́бовать</div>
+                <div class="card-back">
+                    <div class="phonetic">[pɐˈprobəvətʲ]</div>
+                    <div>尝试/品尝</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词61 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">дала́</div>
+                <div class="card-back">
+                    <div class="phonetic">[dɐˈla]</div>
+                    <div>给了</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词62 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">о́ба</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈobə]</div>
+                    <div>两者/两个都</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词63 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">смея́лись</div>
+                <div class="card-back">
+                    <div class="phonetic">[smʲɪˈjalʲɪsʲ]</div>
+                    <div>笑了</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词64 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">вспомина́я</div>
+                <div class="card-back">
+                    <div class="phonetic">[fspəmʲɪˈnajə]</div>
+                    <div>回想起</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词65 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">необы́чный</div>
+                <div class="card-back">
+                    <div class="phonetic">[nʲɪɐˈbɨtɕnɨj]</div>
+                    <div>不同寻常的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词66 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">поняла́</div>
+                <div class="card-back">
+                    <div class="phonetic">[pənʲɪˈla]</div>
+                    <div>明白</div>
+                    <div class="tip">动词过去时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词67 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">здоро́вье</div>
+                <div class="card-back">
+                    <div class="phonetic">[zdɐˈrovʲjɪ]</div>
+                    <div>健康</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词68 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">настрое́ние</div>
+                <div class="card-back">
+                    <div class="phonetic">[nəstrɐˈjenʲɪjɪ]</div>
+                    <div>心情</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词69 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">иногда́</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɪnɐɡˈda]</div>
+                    <div>有时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词70 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">но́вые</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈnovɨjɪ]</div>
+                    <div>新的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词71 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">о́пыты</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈopɨtɨ]</div>
+                    <div>体验/经验</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词72 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">де́лают</div>
+                <div class="card-back">
+                    <div class="phonetic">[ˈdʲeləjʉt]</div>
+                    <div>使/做</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词73 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">жизнь</div>
+                <div class="card-back">
+                    <div class="phonetic">[ʐɨzʲnʲ]</div>
+                    <div>生活</div>
+                </div>
+            </div>
+        </div>
+        <!-- 单词74 -->
+        <div class="flash-card" onclick="this.classList.toggle('flipped')">
+            <div class="card-inner">
+                <div class="card-front">интере́снее</div>
+                <div class="card-back">
+                    <div class="phonetic">[ɪntʲɪˈrʲesʲnʲɪɪ]</div>
+                    <div>更有趣</div>
+                    <div class="tip">比较级形式</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
