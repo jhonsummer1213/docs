@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词闪卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* 闪卡外层容器 */
+        .flash-card {
+            perspective: 1000px;
+            height: 180px;
+            cursor: pointer;
+        }
+        /* 卡片翻转核心 */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 12px;
+        }
+        .flash-card.active .card-inner {
+            transform: rotateY(180deg);
+        }
+        /* 卡片正面 */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .card-front {
+            background-color: #3498db;
+            color: #fff;
+            font-size: 26px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        /* 编号样式 左上角 */
+        .card-num {
+            position: absolute;
+            top: 12px;
+            left: 15px;
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        /* 卡片背面 */
+        .card-back {
+            background-color: #ffffff;
+            color: #2c3e50;
+            transform: rotateY(180deg);
+            border: 2px solid #3498db;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .phonetic {
+            font-size: 18px;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+        .translate {
+            font-size: 17px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .tip {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>俄语单词学习闪卡</h1>
+    <div class="tip">点击卡片翻转 | 正面：俄语单词  背面：音标+中文释义</div>
+    <div class="card-container">
+        <!-- 1 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">1</span>
+                    Заба́вная
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">Zabávnaya</div>
+                    <div class="translate">有趣的/好玩的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 2 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">2</span>
+                    исто́рия
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">istóriya</div>
+                    <div class="translate">故事/历史/事件</div>
+                </div>
+            </div>
+        </div>
+        <!-- 3 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">3</span>
+                    про
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">pro</div>
+                    <div class="translate">关于/涉及/为了(后接名词第四格)</div>
+                </div>
+            </div>
+        </div>
+        <!-- 4 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">4</span>
+                    витами́ны
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">vitamíny</div>
+                    <div class="translate">维生素/维他命</div>
+                </div>
+            </div>
+        </div>
+        <!-- 5 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">5</span>
+                    Весно́й
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">Vesnóy</div>
+                    <div class="translate">在春天</div>
+                </div>
+            </div>
+        </div>
+        <!-- 6 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">6</span>
+                    y
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">u</div>
+                    <div class="translate">第二格表示在某人那里/某人有……</div>
+                </div>
+            </div>
+        </div>
+        <!-- 7 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">7</span>
+                    О́ли
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">Óli</div>
+                    <div class="translate">奥利娅的О́ля→О́ли人名变第二格</div>
+                </div>
+            </div>
+        </div>
+        <!-- 8 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">8</span>
+                    бы́ло
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">býlo</div>
+                    <div class="translate">曾有/曾经是（中性过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 9 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">9</span>
+                    мно́го
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">mnógo</div>
+                    <div class="translate">很多</div>
+                </div>
+            </div>
+        </div>
+        <!-- 10 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">10</span>
+                    рабо́ты
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">rabóty</div>
+                    <div class="translate">工作（名词生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 11 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">11</span>
+                    саду́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">sadú</div>
+                    <div class="translate">花园里（名词处所格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 12 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">12</span>
+                    Она́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">Oná</div>
+                    <div class="translate">她</div>
+                </div>
+            </div>
+        </div>
+        <!-- 13 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">13</span>
+                    посади́ла
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">posadíla</div>
+                    <div class="translate">种下（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 14 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">14</span>
+                    цвето́в
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">tsvetóv</div>
+                    <div class="translate">花朵（名词复数生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 15 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">15</span>
+                    овоще́й
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ovoshchéy</div>
+                    <div class="translate">蔬菜（名词复数生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 16 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">16</span>
+                    че́рез
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">chérez</div>
+                    <div class="translate">经过/……之后</div>
+                </div>
+            </div>
+        </div>
+        <!-- 17 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">17</span>
+                    не́сколько
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">néskolko</div>
+                    <div class="translate">几个</div>
+                </div>
+            </div>
+        </div>
+        <!-- 18 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">18</span>
+                    дней
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">dney</div>
+                    <div class="translate">天数/日子（名词复数生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 19 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">19</span>
+                    почу́вствовала
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">pochúvstvovala</div>
+                    <div class="translate">感觉到（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 20 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">20</span>
+                    уста́лость
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ustálost</div>
+                    <div class="translate">疲倦</div>
+                </div>
+            </div>
+        </div>
+        <!-- 21 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">21</span>
+                    поду́мала
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">podúmala</div>
+                    <div class="translate">思考/想（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 22 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">22</span>
+                    хвата́ет
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">khvatáyet</div>
+                    <div class="translate">足够/缺少（用于否定）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 23 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">23</span>
+                    сил
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">sil</div>
+                    <div class="translate">体力/力量（名词复数生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 24 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">24</span>
+                    реши́ла
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">reshíla</div>
+                    <div class="translate">决定（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 25 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">25</span>
+                    купи́ть
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">kupít</div>
+                    <div class="translate">买（动词原形）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 26 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">26</span>
+                    апте́ке
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">aptéke</div>
+                    <div class="translate">药店（名词前置格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 27 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">27</span>
+                    продаве́ц
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">prodavéts</div>
+                    <div class="translate">店员/售货员</div>
+                </div>
+            </div>
+        </div>
+        <!-- 28 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">28</span>
+                    показа́л
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">pokazál</div>
+                    <div class="translate">展示/给……看（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 29 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">29</span>
+                    ра́зные
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ráznye</div>
+                    <div class="translate">各种各样的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 30 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">30</span>
+                    вы́брала
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">výbrala</div>
+                    <div class="translate">挑选（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 31 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">31</span>
+                    цветны́е
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">tsvetnýe</div>
+                    <div class="translate">彩色的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 32 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">32</span>
+                    табле́тки
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">tabletki</div>
+                    <div class="translate">药片（名词复数形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 33 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">33</span>
+                    наде́ялась
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">nadéyalas</div>
+                    <div class="translate">希望（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 34 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">34</span>
+                    помо́гут
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">pomógut</div>
+                    <div class="translate">将帮助（动词将来时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 35 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">35</span>
+                    быть
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">byt</div>
+                    <div class="translate">是/成为</div>
+                </div>
+            </div>
+        </div>
+        <!-- 36 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">36</span>
+                    здоро́вой
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">zdoróvoy</div>
+                    <div class="translate">健康的（阴性第五格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 37 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">37</span>
+                    си́льной
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">síl'noy</div>
+                    <div class="translate">强壮的（阴性第五格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 38 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">38</span>
+                    сле́дующий
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">sléduyushchiy</div>
+                    <div class="translate">接下来的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 39 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">39</span>
+                    день
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">den'</div>
+                    <div class="translate">日子/天</div>
+                </div>
+            </div>
+        </div>
+        <!-- 40 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">40</span>
+                    приняла́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">prinyalá</div>
+                    <div class="translate">服用（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 41 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">41</span>
+                    пошла́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">poshlá</div>
+                    <div class="translate">步行去（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 42 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">42</span>
+                    час
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">chas</div>
+                    <div class="translate">小时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 43 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">43</span>
+                    заме́тила
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">zamétila</div>
+                    <div class="translate">注意到（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 44 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">44</span>
+                    раста́яли
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">rastáyali</div>
+                    <div class="translate">融化了（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 45 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">45</span>
+                    рту
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">rtu</div>
+                    <div class="translate">嘴里（名词处所格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 46 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">46</span>
+                    бы́ли
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">býli</div>
+                    <div class="translate">曾是（复数过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 47 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">47</span>
+                    ки́слыми
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">kíslymi</div>
+                    <div class="translate">酸的（复数第五格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 48 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">48</span>
+                    сла́дкими
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">sládkimi</div>
+                    <div class="translate">甜的（复数第五格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 49 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">49</span>
+                    одновреме́нно
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">odnovreménno</div>
+                    <div class="translate">同时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 50 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">50</span>
+                    засмея́лась
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">zasmeyálas</div>
+                    <div class="translate">笑了起来（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 51 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">51</span>
+                    ожида́ла
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ozhidála</div>
+                    <div class="translate">预料/期待（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 52 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">52</span>
+                    вку́са
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">vkúsa</div>
+                    <div class="translate">味道（名词生格形式）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 53 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">53</span>
+                    Ве́чером
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">Vécherom</div>
+                    <div class="translate">在晚上</div>
+                </div>
+            </div>
+        </div>
+        <!-- 54 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">54</span>
+                    пришёл
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">prishól</div>
+                    <div class="translate">来到（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 55 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">55</span>
+                    друг
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">drug</div>
+                    <div class="translate">朋友</div>
+                </div>
+            </div>
+        </div>
+        <!-- 56 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">56</span>
+                    уви́дел
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">uvídel</div>
+                    <div class="translate">看到（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 57 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">57</span>
+                    сказа́л
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">skazál</div>
+                    <div class="translate">说（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 58 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">58</span>
+                    то́же
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">tózhe</div>
+                    <div class="translate">也</div>
+                </div>
+            </div>
+        </div>
+        <!-- 59 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">59</span>
+                    хо́чет
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">khóchet</div>
+                    <div class="translate">想要</div>
+                </div>
+            </div>
+        </div>
+        <!-- 60 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">60</span>
+                    попро́бовать
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">popróbovat'</div>
+                    <div class="translate">尝试/品尝</div>
+                </div>
+            </div>
+        </div>
+        <!-- 61 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">61</span>
+                    дала́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">dalá</div>
+                    <div class="translate">给了（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 62 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">62</span>
+                    о́ба
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">óba</div>
+                    <div class="translate">两者/两个都</div>
+                </div>
+            </div>
+        </div>
+        <!-- 63 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">63</span>
+                    смея́лись
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">smeyális'</div>
+                    <div class="translate">笑了（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 64 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">64</span>
+                    вспомина́я
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">vspomináya</div>
+                    <div class="translate">回想起</div>
+                </div>
+            </div>
+        </div>
+        <!-- 65 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">65</span>
+                    необы́чный
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">neobýchnyy</div>
+                    <div class="translate">不同寻常的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 66 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">66</span>
+                    поняла́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ponyalá</div>
+                    <div class="translate">明白（动词过去时）</div>
+                </div>
+            </div>
+        </div>
+        <!-- 67 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">67</span>
+                    здоро́вье
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">zdoróv'ye</div>
+                    <div class="translate">健康</div>
+                </div>
+            </div>
+        </div>
+        <!-- 68 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">68</span>
+                    настрое́ние
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">nastroéniye</div>
+                    <div class="translate">心情</div>
+                </div>
+            </div>
+        </div>
+        <!-- 69 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">69</span>
+                    иногда́
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">inogdá</div>
+                    <div class="translate">有时</div>
+                </div>
+            </div>
+        </div>
+        <!-- 70 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">70</span>
+                    но́вые
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">nóvyye</div>
+                    <div class="translate">新的</div>
+                </div>
+            </div>
+        </div>
+        <!-- 71 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">71</span>
+                    о́пыты
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">ópyty</div>
+                    <div class="translate">体验/经验</div>
+                </div>
+            </div>
+        </div>
+        <!-- 72 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">72</span>
+                    де́лают
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">délayut</div>
+                    <div class="translate">使/做</div>
+                </div>
+            </div>
+        </div>
+        <!-- 73 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">73</span>
+                    жизнь
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">zhizn'</div>
+                    <div class="translate">生活</div>
+                </div>
+            </div>
+        </div>
+        <!-- 74 -->
+        <div class="flash-card" onclick="this.classList.toggle('active')">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-num">74</span>
+                    интере́снее
+                </div>
+                <div class="card-back">
+                    <div class="phonetic">interésneye</div>
+                    <div class="translate">更有趣（比较级形式）</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
