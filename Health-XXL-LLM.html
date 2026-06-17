@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词消消乐 - 课堂版</title>
+    <style>
+        :root {
+            --bg-color: #FFFBE6; /* 浅黄色背景 */
+            --card-ru-color: #FFECB3; /* 俄文卡片色 */
+            --card-cn-color: #E1F5FE; /* 中文卡片色 */
+            --active-color: #FFD54F;
+            --success-color: #81C784;
+            --error-color: #E57373;
+            --text-color: #5D4037;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Calibri', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        /* 主圆角矩形容器 */
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            border: 5px solid #FFE082;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .timer {
+            font-size: 24px;
+            background: #FFF9C4;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* 两栏布局 */
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* 卡片样式 */
+        .card {
+            font-size: 32px; /* 要求字号32 */
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-ru { background-color: var(--card-ru-color); }
+        .card-cn { background-color: var(--card-cn-color); }
+
+        .card:hover { transform: scale(1.03); }
+        
+        .card.selected {
+            background-color: var(--active-color);
+            border-color: #FFA000;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .card.match-success {
+            animation: disappear 0.5s forwards;
+        }
+
+        .card.match-error {
+            background-color: var(--error-color);
+            animation: shake 0.4s;
+        }
+
+        @keyframes disappear {
+            to { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* 胜利弹窗 */
+        #victory-mask {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .victory-box {
+            background: #FFF9C4;
+            padding: 40px;
+            border-radius: 30px;
+            border: 8px solid var(--active-color);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="header">
+            <h2 style="margin:0">俄语词汇消消乐 🎮</h2>
+            <div class="timer">时间: <span id="time-val">0</span>s</div>
+        </div>
+        
+        <div class="game-board">
+            <div class="column" id="ru-col"></div>
+            <div class="column" id="cn-col"></div>
+        </div>
+    </div>
+
+    <div id="victory-mask">
+        <div class="victory-box">
+            <h1 style="font-size: 50px; margin: 0;">🎉 太棒了!</h1>
+            <p style="font-size: 24px;">挑战用时: <span id="final-time">0</span> 秒</p>
+            <button onclick="location.reload()" style="font-size: 24px; padding: 10px 30px; cursor: pointer; border-radius: 15px; border: none; background: var(--active-color);">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        // 提取自来源材料的单词数据 (100组)
+        const wordData = [
+            {ru: "бумага", cn: "纸"}, {ru: "дом", cn: "房子"}, {ru: "кинó", cn: "电影"}, 
+            {ru: "окнó", cn: "窗户"}, {ru: "книга(ги)", cn: "书（复数）"}, {ru: "комната", cn: "房间"},
+            {ru: "нога", cn: "腿, 脚"}, {ru: "кинотеатр", cn: "电影院"}, {ru: "погода", cn: "天气"},
+            {ru: "кто", cn: "谁"}, {ru: "мы", cn: "我们"}, {ru: "она", cn: "她"},
+            {ru: "они", cn: "他们"}, {ru: "оно", cn: "它"}, {ru: "тот", cn: "那个"},
+            {ru: "ты", cn: "你"}, {ru: "это", cn: "这 这是"}, {ru: "этот", cn: "这个"},
+            {ru: "дома", cn: "在家里"}, {ru: "много", cn: "许多"}, {ru: "тихо", cn: "宁静地"},
+            {ru: "да", cn: "是/是的"}, {ru: "пока", cn: "再见"}, {ru: "когда", cn: "当…什么时候"},
+            {ru: "говорить", cn: "说话"}, {ru: "мышь", cn: "老鼠"}, {ru: "вино", cn: "葡萄酒"},
+            {ru: "гора", cn: "山"}, {ru: "доктор", cn: "医生"}, {ru: "игра", cn: "游戏"},
+            {ru: "карта", cn: "地图"}, {ru: "картина", cn: "画/图片"}, {ru: "мэр", cn: "市长"},
+            {ru: "лифт", cn: "电梯"}, {ru: "лу拿", cn: "月亮"}, {ru: "парк", cn: "公园"},
+            {ru: "молоко", cn: "牛奶"}, {ru: "пол", cn: "地板"}, {ru: "рука", cn: "手/臂"},
+            {ru: "тигр", cn: "老虎"}, {ru: "торт", cn: "蛋糕"}, {ru: "вода", cn: "水"},
+            {ru: "фрукты", cn: "水果"}, {ru: "вкусно", cn: "好吃"}, {ru: "вы", cn: "您/你们"},
+            {ru: "город", cn: "城市"}, {ru: "гриб", cn: "蘑菇"}, {ru: "читать", cn: "读"},
+            {ru: "завод", cn: "工厂"}, {ru: "зал", cn: "大厅"}, {ru: "класс", cn: "班级"},
+            {ru: "мост", cn: "桥"}, {ru: "магазин", cn: "商店"}, {ru: "сад", cn: "花园"},
+            {ru: "собака", cn: "狗"}, {ru: "стол", cn: "桌子"}, {ru: "стул", cn: "椅子"},
+            {ru: "мой", cn: "我的"}, {ru: "ваш", cn: "你的"}, {ru: "деньги", cn: "钱"}
+        ];
+
+        // 随机抽取10组单词进行游戏
+        let selectedWords = wordData.sort(() => 0.5 - Math.random()).slice(0, 10);
+        let ruSelected = null;
+        let cnSelected = null;
+        let matchesFound = 0;
+        let timer = 0;
+        let isProcessing = false;
+
+        // 计时器
+        const timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById('time-val').innerText = timer;
+        }, 1000);
+
+        // 程序化音频生成器 (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if(type === 'click') { // 点击音
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if(type === 'error') { // 错误音
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+            } else if(type === 'success') { // 成功音
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if(type === 'victory') { // 胜利音
+                [523.25, 659.25, 783.99].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); o.connect(gain);
+                    o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.1);
+                    o.start(audioCtx.currentTime + i*0.1); o.stop(audioCtx.currentTime + i*0.1 + 0.3);
+                });
+            }
+        }
+
+        // 初始化界面
+        function initBoard() {
+            const ruCol = document.getElementById('ru-col');
+            const cnCol = document.getElementById('cn-col');
+
+            // 俄文随机排序
+            const rus = [...selectedWords].sort(() => Math.random() - 0.5);
+            // 中文随机排序
+            const cns = [...selectedWords].sort(() => Math.random() - 0.5);
+
+            rus.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-ru';
+                card.innerText = item.ru;
+                card.dataset.id = item.ru;
+                card.onclick = () => selectCard(card, 'ru');
+                ruCol.appendChild(card);
+            });
+
+            cns.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-cn';
+                card.innerText = item.cn;
+                card.dataset.id = item.ru; // 绑定RU作为匹配标识
+                card.onclick = () => selectCard(card, 'cn');
+                cnCol.appendChild(card);
+            });
+        }
+
+        function selectCard(card, type) {
+            if (isProcessing || card.classList.contains('match-success')) return;
+
+            playSound('click');
+
+            if (type === 'ru') {
+                if (ruSelected) ruSelected.classList.remove('selected');
+                ruSelected = card;
+            } else {
+                if (cnSelected) cnSelected.classList.remove('selected');
+                cnSelected = card;
+            }
+            card.classList.add('selected');
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (ruSelected && cnSelected) {
+                isProcessing = true;
+                
+                if (ruSelected.dataset.id === cnSelected.dataset.id) {
+                    // 匹配成功
+                    setTimeout(() => {
+                        playSound('success');
+                        ruSelected.classList.add('match-success');
+                        cnSelected.classList.add('match-success');
+                        ruSelected = null; cnSelected = null;
+                        matchesFound++;
+                        isProcessing = false;
+
+                        if (matchesFound === selectedWords.length) winGame();
+                    }, 200);
+                } else {
+                    // 匹配失败
+                    setTimeout(() => {
+                        playSound('error');
+                        ruSelected.classList.add('match-error');
+                        cnSelected.classList.add('match-error');
+                        
+                        setTimeout(() => {
+                            ruSelected.classList.remove('selected', 'match-error');
+                            cnSelected.classList.remove('selected', 'match-error');
+                            ruSelected = null; cnSelected = null;
+                            isProcessing = false;
+                        }, 400);
+                    }, 200);
+                }
+            }
+        }
+
+        function winGame() {
+            clearInterval(timerInterval);
+            playSound('victory');
+            document.getElementById('final-time').innerText = timer;
+            document.getElementById('victory-mask').style.display = 'flex';
+        }
+
+        initBoard();
+    </script>
+</body>
+</html>
