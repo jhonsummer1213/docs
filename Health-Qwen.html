@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词闪卡</title>
+    <style>
+        /* 全局样式 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* 卡片容器 */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 500px;
+            height: 320px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        /* 卡片内部翻转逻辑 */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .card-container.flipped .card {
+            transform: rotateY(180deg);
+        }
+
+        /* 卡片正反面通用样式 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        /* 正面样式 */
+        .card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #eef2f7 100%);
+            border: 1px solid #dce4ec;
+        }
+
+        .card-front .index {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 14px;
+            color: #8899aa;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .card-front .russian-word {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+
+        /* 背面样式 */
+        .card-back {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+
+        .card-back .phonetic {
+            font-size: 22px;
+            color: #a8d0e6;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .card-back .chinese {
+            font-size: 26px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .btn-prev, .btn-next {
+            background-color: #3498db;
+            color: #fff;
+        }
+        .btn-prev:hover, .btn-next:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-flip {
+            background-color: #e67e22;
+            color: #fff;
+        }
+        .btn-flip:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+        }
+
+        /* 提示文字 */
+        .hint {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #95a5a6;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 550px) {
+            .card-container { height: 260px; }
+            .card-front .russian-word { font-size: 28px; }
+            .card-back .phonetic { font-size: 18px; }
+            .card-back .chinese { font-size: 20px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container" id="cardContainer">
+        <div class="card">
+            <div class="card-face card-front">
+                <div class="index" id="cardIndex"></div>
+                <div class="russian-word" id="russianWord"></div>
+            </div>
+            <div class="card-face card-back">
+                <div class="phonetic" id="phonetic"></div>
+                <div class="chinese" id="chineseMeaning"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-prev" id="prevBtn">上一个</button>
+        <button class="btn btn-flip" id="flipBtn">翻转</button>
+        <button class="btn btn-next" id="nextBtn">下一个</button>
+    </div>
+
+    <div class="hint">提示：点击卡片或按 [空格] 翻转，按 [←] [→] 切换单词</div>
+
+<script>
+    // 俄语单词数据
+    const flashcards = [
+        { ru: "Заба́вная", ph: "[zɐˈbavnəjə]", zh: "有趣的/好玩的" },
+        { ru: "исто́рия", ph: "[ɪˈstorʲɪjə]", zh: "故事/历史/事件" },
+        { ru: "про", ph: "[pro]", zh: "关于/涉及/为了(后接名词第四格)" },
+        { ru: "витами́ны", ph: "[vʲɪtɐˈmʲinɨ]", zh: "维生素/维他命" },
+        { ru: "Весно́й", ph: "[vʲɪsˈnoj]", zh: "在春天" },
+        { ru: "y", ph: "[u]", zh: "第二格表示在某人那里/某人有……" },
+        { ru: "О́ли", ph: "[ˈolʲɪ]", zh: "奥利娅的О́ля→О́ли人名变第二格" },
+        { ru: "бы́ло", ph: "[ˈbɨlə]", zh: "曾有/曾经是（中性过去时）" },
+        { ru: "мно́го", ph: "[ˈmnogə]", zh: "很多" },
+        { ru: "рабо́ты", ph: "[rɐˈbotɨ]", zh: "工作（名词生格形式）" },
+        { ru: "саду́", ph: "[sɐˈdu]", zh: "花园里（名词处所格形式）" },
+        { ru: "Она́", ph: "[ɐˈna]", zh: "她" },
+        { ru: "посади́ла", ph: "[pəsɐˈdʲilə]", zh: "种下（动词过去时）" },
+        { ru: "цвето́в", ph: "[tsvʲɪˈtof]", zh: "花朵（名词复数生格形式）" },
+        { ru: "овоще́й", ph: "[ɐˈvoɕːɪj]", zh: "蔬菜（名词复数生格形式）" },
+        { ru: "че́рез", ph: "[ˈtɕerʲɪs]", zh: "经过/……之后" },
+        { ru: "не́сколько", ph: "[ˈnʲeskəlʲkə]", zh: "几个" },
+        { ru: "дней", ph: "[dʲnʲej]", zh: "天数/日子（名词复数生格形式）" },
+        { ru: "почу́вствовала", ph: "[pɐˈtɕustvəvələ]", zh: "感觉到（动词过去时）" },
+        { ru: "уста́лость", ph: "[ʊˈstaləsʲtʲ]", zh: "疲倦" },
+        { ru: "поду́мала", ph: "[pɐˈdumələ]", zh: "思考/想（动词过去时）" },
+        { ru: "хвата́ет", ph: "[xvɐˈtajɪt]", zh: "足够/缺少（用于否定）" },
+        { ru: "сил", ph: "[sʲil]", zh: "体力/力量（名词复数生格形式）" },
+        { ru: "реши́ла", ph: "[rʲɪˈʂɨlə]", zh: "决定（动词过去时）" },
+        { ru: "купи́ть", ph: "[kʊˈpʲitʲ]", zh: "买（动词原形）" },
+        { ru: "апте́ке", ph: "[ɐˈpʲtʲekʲɪ]", zh: "药店（名词前置格形式）" },
+        { ru: "продаве́ц", ph: "[prədɐˈvʲets]", zh: "店员/售货员" },
+        { ru: "показа́л", ph: "[pəkɐˈzal]", zh: "展示/给……看（动词过去时）" },
+        { ru: "ра́зные", ph: "[ˈraznɨjə]", zh: "各种各样的" },
+        { ru: "вы́брала", ph: "[ˈvɨbrələ]", zh: "挑选（动词过去时）" },
+        { ru: "цветны́е", ph: "[tsvʲɪtˈnɨjə]", zh: "彩色的" },
+        { ru: "табле́тки", ph: "[tɐˈblʲetkʲɪ]", zh: "药片（名词复数形式）" },
+        { ru: "наде́ялась", ph: "[nɐˈdʲejələsʲ]", zh: "希望（动词过去时）" },
+        { ru: "помо́гут", ph: "[pɐˈmogʊt]", zh: "将帮助（动词将来时）" },
+        { ru: "быть", ph: "[bɨtʲ]", zh: "是/成为" },
+        { ru: "здоро́вой", ph: "[zdɐˈrovəj]", zh: "健康的（阴性第五格形式）" },
+        { ru: "си́льной", ph: "[ˈsʲilʲnəj]", zh: "强壮的（阴性第五格形式）" },
+        { ru: "сле́дующий", ph: "[ˈslʲedʊjʉɕːɪj]", zh: "接下来的" },
+        { ru: "день", ph: "[dʲenʲ]", zh: "日子/天" },
+        { ru: "приняла́", ph: "[prʲɪnʲˈjalə]", zh: "服用（动词过去时）" },
+        { ru: "пошла́", ph: "[pɐʂˈla]", zh: "步行去（动词过去时）" },
+        { ru: "час", ph: "[tɕas]", zh: "小时" },
+        { ru: "заме́тила", ph: "[ˈzamʲɪtʲɪlə]", zh: "注意到（动词过去时）" },
+        { ru: "раста́яли", ph: "[rɐˈstajəlʲɪ]", zh: "融化了（动词过去时）" },
+        { ru: "рту", ph: "[rtu]", zh: "嘴里（名词处所格形式）" },
+        { ru: "бы́ли", ph: "[ˈbɨlʲɪ]", zh: "曾是（复数过去时）" },
+        { ru: "ки́слыми", ph: "[ˈkʲislɨmʲɪ]", zh: "酸的（复数第五格形式）" },
+        { ru: "сла́дкими", ph: "[ˈslatkʲɪmʲɪ]", zh: "甜的（复数第五格形式）" },
+        { ru: "одновреме́нно", ph: "[ɐdnɐˈvrʲemʲɪnə]", zh: "同时" },
+        { ru: "засмея́лась", ph: "[zəsmʲɪˈjaləsʲ]", zh: "笑了起来（动词过去时）" },
+        { ru: "ожида́ла", ph: "[ɐʐɨˈdalə]", zh: "预料/期待（动词过去时）" },
+        { ru: "вку́са", ph: "[ˈvkusə]", zh: "味道（名词生格形式）" },
+        { ru: "Ве́чером", ph: "[ˈvʲetɕɪrəm]", zh: "在晚上" },
+        { ru: "пришёл", ph: "[prʲɪˈʂol]", zh: "来到（动词过去时）" },
+        { ru: "друг", ph: "[druk]", zh: "朋友" },
+        { ru: "уви́дел", ph: "[ʊˈvʲidʲɪl]", zh: "看到（动词过去时）" },
+        { ru: "сказа́л", ph: "[skɐˈzal]", zh: "说（动词过去时）" },
+        { ru: "то́же", ph: "[ˈtoʐɨ]", zh: "也" },
+        { ru: "хо́чет", ph: "[ˈxotɕɪt]", zh: "想要" },
+        { ru: "попро́бовать", ph: "[pɐˈprobəvətʲ]", zh: "尝试/品尝" },
+        { ru: "дала́", ph: "[dɐˈla]", zh: "给了（动词过去时）" },
+        { ru: "о́ба", ph: "[ˈobə]", zh: "两者/两个都" },
+        { ru: "смея́лись", ph: "[smʲɪˈjalʲɪsʲ]", zh: "笑了（动词过去时）" },
+        { ru: "вспомина́я", ph: "[fspəmʲɪˈnajə]", zh: "回想起" },
+        { ru: "необы́чный", ph: "[nʲɪɐˈbɨtɕnɨj]", zh: "不同寻常的" },
+        { ru: "поняла́", ph: "[pɐnʲˈjalə]", zh: "明白（动词过去时）" },
+        { ru: "здоро́вье", ph: "[zdɐˈrovʲjə]", zh: "健康" },
+        { ru: "настрое́ние", ph: "[nɐstrɐˈjenʲɪjə]", zh: "心情" },
+        { ru: "иногда́", ph: "[inɐˈɡda]", zh: "有时" },
+        { ru: "но́вые", ph: "[ˈnovɨjə]", zh: "新的" },
+        { ru: "о́пыты", ph: "[ˈopɨtɨ]", zh: "体验/经验" },
+        { ru: "де́лают", ph: "[ˈdʲeləjʊt]", zh: "使/做" },
+        { ru: "жизнь", ph: "[ʐɨznʲ]", zh: "生活" },
+        { ru: "интере́снее", ph: "[ɪnʲtʲɪˈrʲesnʲɪjɪ]", zh: "更有趣（比较级形式）" }
+    ];
+
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    const cardContainer = document.getElementById('cardContainer');
+    const cardIndexEl = document.getElementById('cardIndex');
+    const russianWordEl = document.getElementById('russianWord');
+    const phoneticEl = document.getElementById('phonetic');
+    const chineseMeaningEl = document.getElementById('chineseMeaning');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const flipBtn = document.getElementById('flipBtn');
+
+    // 渲染卡片内容
+    function renderCard() {
+        const data = flashcards[currentIndex];
+        cardIndexEl.textContent = `${currentIndex + 1}`;
+        russianWordEl.textContent = data.ru;
+        phoneticEl.textContent = data.ph;
+        chineseMeaningEl.textContent = data.zh;
+        
+        // 切换时默认回到正面
+        if (isFlipped) {
+            isFlipped = false;
+            cardContainer.classList.remove('flipped');
+        }
+    }
+
+    // 翻转卡片
+    function toggleFlip() {
+        isFlipped = !isFlipped;
+        cardContainer.classList.toggle('flipped');
+    }
+
+    // 上一个
+    function showPrev() {
+        currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+        renderCard();
+    }
+
+    // 下一个
+    function showNext() {
+        currentIndex = (currentIndex + 1) % flashcards.length;
+        renderCard();
+    }
+
+    // 事件监听
+    cardContainer.addEventListener('click', toggleFlip);
+    flipBtn.addEventListener('click', toggleFlip);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+
+    // 键盘快捷键支持
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') showPrev();
+        else if (e.key === 'ArrowRight') showNext();
+        else if (e.key === ' ') {
+            e.preventDefault(); // 防止页面滚动
+            toggleFlip();
+        }
+    });
+
+    // 初始化渲染
+    renderCard();
+</script>
+</body>
+</html>
