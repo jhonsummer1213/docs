@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词闪卡 · 基础词汇</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 350px;
+            height: 250px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+            border-radius: 20px;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            top: 0;
+            left: 0;
+        }
+
+        .card-front {
+            color: var(--primary-color);
+            background: linear-gradient(145deg, #ffffff, #f0f3f5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-front .word {
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .card-front .index-number {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #7a8a9e;
+            background: rgba(0,0,0,0.04);
+            padding: 2px 10px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+            user-select: none;
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, #2c6b9e, #1f4b73);
+            color: white;
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        .card-back .phonetic {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-style: italic;
+            opacity: 0.9;
+            letter-spacing: 1px;
+        }
+
+        .card-back .translation {
+            font-size: 2rem;
+            font-weight: 500;
+            line-height: 1.3;
+            max-width: 90%;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            border-radius: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            flex: 1 0 auto;
+            min-width: 80px;
+        }
+
+        button:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .progress {
+            margin-top: 18px;
+            color: #4a5b6e;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .hint {
+            margin-top: 12px;
+            color: #7a8a9e;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 480px) {
+            .flashcard-wrapper {
+                width: 90vw;
+                height: 220px;
+            }
+            .card-front .word {
+                font-size: 2.2rem;
+            }
+            .card-back .translation {
+                font-size: 1.6rem;
+            }
+            button {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+                min-width: 60px;
+            }
+            .card-front .index-number {
+                font-size: 0.7rem;
+                top: 8px;
+                left: 10px;
+                padding: 1px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color:#2c3e50; font-weight: 400; letter-spacing: 1px;">🇷🇺 俄语闪卡</h1>
+        <div class="flashcard-wrapper" onclick="flipCard()">
+            <div class="flashcard" id="card">
+                <div class="card-face card-front">
+                    <div class="index-number" id="indexDisplay"></div>
+                    <div class="word" id="word-front"></div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="phonetic" id="phonetic-back"></div>
+                    <div class="translation" id="translation-back"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="prevCard()">◀ 上一张</button>
+            <button onclick="nextCard()">下一张 ▶</button>
+            <button onclick="shuffleCards()">🔀 打乱</button>
+        </div>
+
+        <div class="progress" id="progress"></div>
+        <div class="hint">点击卡片翻转 · 键盘 ← → 翻页 · 空格翻转</div>
+    </div>
+
+    <script>
+        const words = [
+            { num: 51, ru: "футбол", ph: "fud-ból", cn: "足球(运动)" },
+            { num: 52, ru: "вы", ph: "vei", cn: "你们; 您" },
+            { num: 53, ru: "вот", ph: "vot", cn: "这就是(语气词)" },
+            { num: 54, ru: "альбом", ph: "ali-bóm", cn: "相册" },
+            { num: 55, ru: "город", ph: "gó-dət", cn: "城市" },
+            { num: 56, ru: "гриб", ph: "g-lip", cn: "蘑菇" },
+            { num: 57, ru: "доска", ph: "das-gá", cn: "木板; 黑板" },
+            { num: 58, ru: "читать", ph: "qi-dá-qi", cn: "读" },
+            { num: 59, ru: "завод", ph: "za-vót", cn: "工厂(重工业)" },
+            { num: 60, ru: "зал", ph: "zal", cn: "大厅; 会客厅" },
+            { num: 61, ru: "зоопарк", ph: "za:-bádrk", cn: "动物园" },
+            { num: 62, ru: "класс", ph: "klas", cn: "班级; 教室" },
+            { num: 63, ru: "клуб", ph: "klup", cn: "俱乐部" },
+            { num: 64, ru: "композитор", ph: "kəmba-ídəlr", cn: "作曲家" },
+            { num: 65, ru: "мост", ph: "most", cn: "桥" },
+            { num: 66, ru: "магазин", ph: "məga-jín", cn: "商店" },
+            { num: 67, ru: "народ", ph: "na-dót", cn: "人民" },
+            { num: 68, ru: "пальто", ph: "bayi-dó", cn: "外套; 大衣" },
+            { num: 69, ru: "письмо", ph: "bixi-mó", cn: "信" },
+            { num: 70, ru: "подруга", ph: "ba-dlú-gə", cn: "女（性）朋友" },
+            { num: 71, ru: "район", ph: "ədra-yón", cn: "地区; 一带" },
+            { num: 72, ru: "рубль", ph: "ədu'bli", cn: "卢布（钱）" },
+            { num: 73, ru: "сад", ph: "sat", cn: "花园" },
+            { num: 74, ru: "словарь", ph: "sla-váli", cn: "词典" },
+            { num: 75, ru: "собака", ph: "sa-bága", cn: "狗; @ 符号" },
+            { num: 76, ru: "стол", ph: "sdol", cn: "桌子" },
+            { num: 77, ru: "стул", ph: "sdul", cn: "椅子; 凳子" },
+            { num: 78, ru: "мой", ph: "moi", cn: "我的" },
+            { num: 79, ru: "вой", ph: "voi", cn: "你的" },
+            { num: 80, ru: "ваш", ph: "vaʃ", cn: "你的" },
+            { num: 81, ru: "дело", ph: "jié-lə", cn: "事情（单数）" },
+            { num: 82, ru: "дела", ph: "jié-la", cn: "事情（复数）" },
+            { num: 83, ru: "сумка", ph: "súm-ga", cn: "手提包/各种包" },
+            { num: 84, ru: "адрес", ph: "ád-lis", cn: "地址" },
+            { num: 85, ru: "берёза", ph: "bi-lju-zə", cn: "白桦树" },
+            { num: 86, ru: "газета", ph: "ga-jié-də", cn: "报纸" },
+            { num: 87, ru: "деньги", ph: "jín-gei", cn: "钱" },
+            { num: 88, ru: "откуда ты?", ph: "at-gú-də dei?", cn: "你从哪里来？" },
+            { num: 89, ru: "откуда вы?", ph: "at-gú-də vei?", cn: "您从哪里来？" },
+            { num: 90, ru: "рюкзак", ph: "ədjuk-záк", cn: "(双肩)背包" },
+            { num: 91, ru: "ёлка", ph: "il-ga", cn: "圣诞树 枞树" },
+            { num: 92, ru: "костюм", ph: "gaxi-jiúm", cn: "西装; 连衣裙" },
+            { num: 93, ru: "ну и что?", ph: "nu yi ʃdo", cn: "那又怎样？" },
+            { num: 94, ru: "метро", ph: "mi-dló", cn: "地铁" },
+            { num: 95, ru: "музей", ph: "mu-zéy", cn: "博物馆" },
+            { num: 96, ru: "озеро", ph: "ó-jie-drə", cn: "湖" },
+            { num: 97, ru: "платье", ph: "blá-qie", cn: "连衣裙" },
+            { num: 98, ru: "портфель", ph: "badrt-féi-li", cn: "文件包 公文包" },
+            { num: 99, ru: "привет", ph: "bli-vjét", cn: "你好" },
+            { num: 100, ru: "река", ph: "əli-ká", cn: "河, 江" }
+        ];
+
+        let currentIndex = 0;
+        const cardElement = document.getElementById('card');
+        const wordFront = document.getElementById('word-front');
+        const phoneticBack = document.getElementById('phonetic-back');
+        const translationBack = document.getElementById('translation-back');
+        const progressText = document.getElementById('progress');
+        const indexDisplay = document.getElementById('indexDisplay');
+
+        function updateCard() {
+            cardElement.classList.remove('flipped');
+            const current = words[currentIndex];
+            wordFront.textContent = current.ru;
+            phoneticBack.textContent = current.ph;
+            translationBack.textContent = current.cn;
+            indexDisplay.textContent = current.num;
+            progressText.textContent = `${current.num} / ${words.length}`;
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % words.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + words.length) % words.length;
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = words.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [words[i], words[j]] = [words[j], words[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                flipCard();
+            }
+            if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                nextCard();
+            }
+            if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                prevCard();
+            }
+        });
+
+        updateCard();
+    </script>
+</body>
+</html>
