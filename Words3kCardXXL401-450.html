@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词消消乐 - P401-450 版本</title>
+    <style>
+        :root {
+            --bg-color: #FFFBE6;
+            --card-ru-color: #FFECB3;
+            --card-cn-color: #E1F5FE;
+            --active-color: #FFD54F;
+            --success-color: #81C784;
+            --error-color: #E57373;
+            --text-color: #5D4037;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Calibri', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            border: 5px solid #FFE082;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .timer {
+            font-size: 24px;
+            background: #FFF9C4;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            font-size: 32px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .card-number {
+            font-size: 24px;
+        }
+
+        .card-ru { background-color: var(--card-ru-color); }
+        .card-cn { background-color: var(--card-cn-color); }
+
+        .card:hover { transform: scale(1.03); }
+
+        .card.selected {
+            background-color: var(--active-color);
+            border-color: #FFA000;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .card.match-success {
+            animation: disappear 0.5s forwards;
+        }
+
+        .card.match-error {
+            background-color: var(--error-color);
+            animation: shake 0.4s;
+        }
+
+        @keyframes disappear {
+            to { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #victory-mask {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .victory-box {
+            background: #FFF9C4;
+            padding: 40px;
+            border-radius: 30px;
+            border: 8px solid var(--active-color);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="header">
+            <h2 style="margin:0">俄语词汇消消乐 🎮</h2>
+            <div class="timer">时间: <span id="time-val">0</span>s</div>
+        </div>
+
+        <div class="game-board">
+            <div class="column" id="ru-col"></div>
+            <div class="column" id="cn-col"></div>
+        </div>
+    </div>
+
+    <div id="victory-mask">
+        <div class="victory-box">
+            <h1 style="font-size: 50px; margin: 0;">🎉 太棒了!</h1>
+            <p style="font-size: 24px;">挑战用时: <span id="final-time">0</span> 秒</p>
+            <button onclick="location.reload()" style="font-size: 24px; padding: 10px 30px; cursor: pointer; border-radius: 15px; border: none; background: var(--active-color);">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        const wordData = [
+            {ru: "401 Италия", cn: "意大利"}, {ru: "402 Испания", cn: "西班牙"}, {ru: "403 Германия", cn: "德国"},
+            {ru: "404 Китай", cn: "中国"}, {ru: "405 китаец", cn: "中国男人（阳性）"}, {ru: "406 китаянка", cn: "中国女人（阴性）"},
+            {ru: "407 китайцы", cn: "中国人（复数）"}, {ru: "408 тайвань", cn: "台湾"}, {ru: "409 тайванец", cn: "台湾男人（阳性）"},
+            {ru: "410 тайванька", cn: "台湾女人（阴性）"}, {ru: "411 тайваньцы", cn: "台湾人（复数）"}, {ru: "412 Россия", cn: "俄罗斯"},
+            {ru: "413 Русский", cn: "俄罗斯男人（阳性）"}, {ru: "414 Русская", cn: "俄罗斯女人（阴性）"}, {ru: "415 Русские", cn: "俄罗斯人（复数）"},
+            {ru: "416 Америка", cn: "美国"}, {ru: "417 Англия", cn: "英国"}, {ru: "418 Франция", cn: "法国"},
+            {ru: "419 Япония", cn: "日本"}, {ru: "420 Москва", cn: "莫斯科"}, {ru: "421 Москвы", cn: "莫斯科（2格）"},
+            {ru: "422 Пекин", cn: "北京"}, {ru: "423 Пекина", cn: "北京（2格）"}, {ru: "424 Шанхай", cn: "上海"},
+            {ru: "425 Шанхая", cn: "上海（2格）"}, {ru: "426 из", cn: "从；由...做的"}, {ru: "427 Из Шанхая", cn: "从上海来"},
+            {ru: "428 я из России", cn: "我从俄罗斯来"}, {ru: "429 Тайбэй", cn: "台北"}, {ru: "430 Тайбэя", cn: "台北（2格）"},
+            {ru: "431 раз", cn: "次"}, {ru: "432 можно ещё раз", cn: "再说一次"}, {ru: "433 делаете", cn: "做什么"},
+            {ru: "434 друг", cn: "男性朋友/死党"}, {ru: "435 друзья", cn: "朋友（复数）"}, {ru: "436 пить", cn: "喝"},
+            {ru: "437 ура", cn: "万岁"}, {ru: "438 только", cn: "只；仅仅"}, {ru: "439 угадай", cn: "猜"},
+            {ru: "440 хотеть", cn: "想要"}, {ru: "441 правда", cn: "真的；真相"}, {ru: "442 урок", cn: "课；课程"},
+            {ru: "443 компьютер", cn: "电脑"}, {ru: "444 на компьютере", cn: "在电脑上"}, {ru: "445 мороженое", cn: "冰淇淋"},
+            {ru: "446 который", cn: "哪个；什么"}, {ru: "447 время", cn: "时间"}, {ru: "448 времени", cn: "时间（概念）"},
+            {ru: "449 час", cn: "点/时"}, {ru: "450 сколько", cn: "多少"}
+        ];
+
+        let selectedWords = wordData.sort(() => 0.5 - Math.random()).slice(0, 10);
+        let ruSelected = null;
+        let cnSelected = null;
+        let matchesFound = 0;
+        let timer = 0;
+        let isProcessing = false;
+
+        const timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById('time-val').innerText = timer;
+        }, 1000);
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if(type === 'click') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if(type === 'error') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+            } else if(type === 'success') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if(type === 'victory') {
+                [523.25, 659.25, 783.99].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); o.connect(gain);
+                    o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.1);
+                    o.start(audioCtx.currentTime + i*0.1); o.stop(audioCtx.currentTime + i*0.1 + 0.3);
+                });
+            }
+        }
+
+        function initBoard() {
+            const ruCol = document.getElementById('ru-col');
+            const cnCol = document.getElementById('cn-col');
+
+            const rus = [...selectedWords].sort(() => Math.random() - 0.5);
+            const cns = [...selectedWords].sort(() => Math.random() - 0.5);
+
+            rus.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-ru';
+                const parts = item.ru.split(' ');
+                const number = parts[0];
+                const word = parts.slice(1).join(' ');
+                card.innerHTML = `<span class="card-number">${number}</span>-<span>${word}</span>`;
+                card.dataset.id = item.ru;
+                card.onclick = () => selectCard(card, 'ru');
+                ruCol.appendChild(card);
+            });
+
+            cns.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-cn';
+                card.innerText = item.cn;
+                card.dataset.id = item.ru;
+                card.onclick = () => selectCard(card, 'cn');
+                cnCol.appendChild(card);
+            });
+        }
+
+        function selectCard(card, type) {
+            if (isProcessing || card.classList.contains('match-success')) return;
+
+            playSound('click');
+
+            if (type === 'ru') {
+                if (ruSelected) ruSelected.classList.remove('selected');
+                ruSelected = card;
+            } else {
+                if (cnSelected) cnSelected.classList.remove('selected');
+                cnSelected = card;
+            }
+            card.classList.add('selected');
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (ruSelected && cnSelected) {
+                isProcessing = true;
+
+                if (ruSelected.dataset.id === cnSelected.dataset.id) {
+                    setTimeout(() => {
+                        playSound('success');
+                        ruSelected.classList.add('match-success');
+                        cnSelected.classList.add('match-success');
+                        ruSelected = null; cnSelected = null;
+                        matchesFound++;
+                        isProcessing = false;
+
+                        if (matchesFound === selectedWords.length) winGame();
+                    }, 200);
+                } else {
+                    setTimeout(() => {
+                        playSound('error');
+                        ruSelected.classList.add('match-error');
+                        cnSelected.classList.add('match-error');
+
+                        setTimeout(() => {
+                            ruSelected.classList.remove('selected', 'match-error');
+                            cnSelected.classList.remove('selected', 'match-error');
+                            ruSelected = null; cnSelected = null;
+                            isProcessing = false;
+                        }, 400);
+                    }, 200);
+                }
+            }
+        }
+
+        function winGame() {
+            clearInterval(timerInterval);
+            playSound('victory');
+            document.getElementById('final-time').innerText = timer;
+            document.getElementById('victory-mask').style.display = 'flex';
+        }
+
+        initBoard();
+    </script>
+</body>
+</html>
