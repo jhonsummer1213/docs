@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄语单词消消乐 - P151-200 版本</title>
+    <style>
+        :root {
+            --bg-color: #FFFBE6;
+            --card-ru-color: #FFECB3;
+            --card-cn-color: #E1F5FE;
+            --active-color: #FFD54F;
+            --success-color: #81C784;
+            --error-color: #E57373;
+            --text-color: #5D4037;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Calibri', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .game-container {
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            border: 5px solid #FFE082;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+
+        .timer {
+            font-size: 24px;
+            background: #FFF9C4;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card {
+            font-size: 32px;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .card-number {
+            font-size: 24px;
+        }
+
+        .card-ru { background-color: var(--card-ru-color); }
+        .card-cn { background-color: var(--card-cn-color); }
+
+        .card:hover { transform: scale(1.03); }
+
+        .card.selected {
+            background-color: var(--active-color);
+            border-color: #FFA000;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .card.match-success {
+            animation: disappear 0.5s forwards;
+        }
+
+        .card.match-error {
+            background-color: var(--error-color);
+            animation: shake 0.4s;
+        }
+
+        @keyframes disappear {
+            to { transform: scale(0); opacity: 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #victory-mask {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .victory-box {
+            background: #FFF9C4;
+            padding: 40px;
+            border-radius: 30px;
+            border: 8px solid var(--active-color);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="header">
+            <h2 style="margin:0">俄语词汇消消乐 🎮</h2>
+            <div class="timer">时间: <span id="time-val">0</span>s</div>
+        </div>
+
+        <div class="game-board">
+            <div class="column" id="ru-col"></div>
+            <div class="column" id="cn-col"></div>
+        </div>
+    </div>
+
+    <div id="victory-mask">
+        <div class="victory-box">
+            <h1 style="font-size: 50px; margin: 0;">🎉 太棒了!</h1>
+            <p style="font-size: 24px;">挑战用时: <span id="final-time">0</span> 秒</p>
+            <button onclick="location.reload()" style="font-size: 24px; padding: 10px 30px; cursor: pointer; border-radius: 15px; border: none; background: var(--active-color);">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        const wordData = [
+            {ru: "151 инженер", cn: "工程师"}, {ru: "152 лес", cn: "森林"}, {ru: "153 лицо", cn: "脸"},
+            {ru: "154 нос", cn: "鼻子"}, {ru: "155 рот", cn: "嘴, 口"}, {ru: "156 человек", cn: "人；人类"},
+            {ru: "157 люди", cn: "人(复数)"}, {ru: "158 лампа", cn: "灯"}, {ru: "159 лампы", cn: "灯（复数）"},
+            {ru: "160 публика", cn: "读者；观众"}, {ru: "161 пэтэушник", cn: "技校生/中专生"}, {ru: "162 боб", cn: "豆子"},
+            {ru: "163 буфет", cn: "小吃馆食堂"}, {ru: "164 здравствуйте", cn: "您好(复数)"}, {ru: "165 Здравствуй!", cn: "你好!"},
+            {ru: "166 до свидания", cn: "再见（正式）"}, {ru: "167 Доброе утро", cn: "早安 早上好"}, {ru: "168 Добрый день", cn: "中午好!"},
+            {ru: "169 Добрый вечер", cn: "晚上好"}, {ru: "170 спокойной ночи", cn: "晚安"}, {ru: "171 тут", cn: "这里/在这儿"},
+            {ru: "172 там", cn: "在那边；以后"}, {ru: "173 же", cn: "同样;又;已经"}, {ru: "174 а", cn: "而"},
+            {ru: "175 фото", cn: "照片"}, {ru: "176 приятель", cn: "普通朋友"}, {ru: "177 Парень", cn: "男朋友"},
+            {ru: "178 тебя", cn: "你（阳性）"}, {ru: "179 есть", cn: "吃；有/存在"}, {ru: "180 женщина", cn: "女士（中年）"},
+            {ru: "181 сок", cn: "果汁；汁液"}, {ru: "182 суп", cn: "汤"}, {ru: "183 зонт", cn: "雨伞"},
+            {ru: "184 ваза", cn: "花瓶"}, {ru: "185 Рис", cn: "米饭；稻米；大米"}, {ru: "186 сыр", cn: "奶酪；起司"},
+            {ru: "187 шапка", cn: "帽子"}, {ru: "188 шарф", cn: "围巾"}, {ru: "189 машина", cn: "汽车"},
+            {ru: "190 муж", cn: "丈夫；老公"}, {ru: "191 жена́", cn: "妻子；老婆"}, {ru: "192 ещё", cn: "还；再"},
+            {ru: "193 цифра", cn: "数字"}, {ru: "194 цирк", cn: "马戏团"}, {ru: "195 центр", cn: "中心"},
+            {ru: "196 интересно", cn: "有趣"}, {ru: "197 паспорт", cn: "护照"}, {ru: "198 чёрт", cn: "该死的"},
+            {ru: "199 чай", cn: "茶"}, {ru: "200 кофе", cn: "咖啡"}
+        ];
+
+        let selectedWords = wordData.sort(() => 0.5 - Math.random()).slice(0, 10);
+        let ruSelected = null;
+        let cnSelected = null;
+        let matchesFound = 0;
+        let timer = 0;
+        let isProcessing = false;
+
+        const timerInterval = setInterval(() => {
+            timer++;
+            document.getElementById('time-val').innerText = timer;
+        }, 1000);
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if(type === 'click') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if(type === 'error') {
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+            } else if(type === 'success') {
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if(type === 'victory') {
+                [523.25, 659.25, 783.99].forEach((f, i) => {
+                    const o = audioCtx.createOscillator(); o.connect(gain);
+                    o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.1);
+                    o.start(audioCtx.currentTime + i*0.1); o.stop(audioCtx.currentTime + i*0.1 + 0.3);
+                });
+            }
+        }
+
+        function initBoard() {
+            const ruCol = document.getElementById('ru-col');
+            const cnCol = document.getElementById('cn-col');
+
+            const rus = [...selectedWords].sort(() => Math.random() - 0.5);
+            const cns = [...selectedWords].sort(() => Math.random() - 0.5);
+
+            rus.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-ru';
+                const parts = item.ru.split(' ');
+                const number = parts[0];
+                const word = parts.slice(1).join(' ');
+                card.innerHTML = `<span class="card-number">${number}</span>-<span>${word}</span>`;
+                card.dataset.id = item.ru;
+                card.onclick = () => selectCard(card, 'ru');
+                ruCol.appendChild(card);
+            });
+
+            cns.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card card-cn';
+                card.innerText = item.cn;
+                card.dataset.id = item.ru;
+                card.onclick = () => selectCard(card, 'cn');
+                cnCol.appendChild(card);
+            });
+        }
+
+        function selectCard(card, type) {
+            if (isProcessing || card.classList.contains('match-success')) return;
+
+            playSound('click');
+
+            if (type === 'ru') {
+                if (ruSelected) ruSelected.classList.remove('selected');
+                ruSelected = card;
+            } else {
+                if (cnSelected) cnSelected.classList.remove('selected');
+                cnSelected = card;
+            }
+            card.classList.add('selected');
+
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (ruSelected && cnSelected) {
+                isProcessing = true;
+
+                if (ruSelected.dataset.id === cnSelected.dataset.id) {
+                    setTimeout(() => {
+                        playSound('success');
+                        ruSelected.classList.add('match-success');
+                        cnSelected.classList.add('match-success');
+                        ruSelected = null; cnSelected = null;
+                        matchesFound++;
+                        isProcessing = false;
+
+                        if (matchesFound === selectedWords.length) winGame();
+                    }, 200);
+                } else {
+                    setTimeout(() => {
+                        playSound('error');
+                        ruSelected.classList.add('match-error');
+                        cnSelected.classList.add('match-error');
+
+                        setTimeout(() => {
+                            ruSelected.classList.remove('selected', 'match-error');
+                            cnSelected.classList.remove('selected', 'match-error');
+                            ruSelected = null; cnSelected = null;
+                            isProcessing = false;
+                        }, 400);
+                    }, 200);
+                }
+            }
+        }
+
+        function winGame() {
+            clearInterval(timerInterval);
+            playSound('victory');
+            document.getElementById('final-time').innerText = timer;
+            document.getElementById('victory-mask').style.display = 'flex';
+        }
+
+        initBoard();
+    </script>
+</body>
+</html>
